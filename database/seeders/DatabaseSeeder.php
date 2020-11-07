@@ -2,7 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Barang;
 use Illuminate\Database\Seeder;
+use DB;
+use Hash;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,8 +15,18 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        // \App\Models\User::factory(10)->create();
+    public function run(){
+        DB::table('users')->insert([
+            'name' => 'iwan setiawan',
+            'username' => 'iwansetiawan',
+            'email' => 'iwansetiawan@ekajayafishing.com',
+            'password' => Hash::make('kasir'),
+            'role' => 'super admin',
+        ]);
+
+        Barang::create([
+            'nama_barang' => 'kopi hitam',
+            'harga_barang' => 3000
+        ]);
     }
 }

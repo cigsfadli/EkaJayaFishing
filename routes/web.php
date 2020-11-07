@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', ['App\Http\Controllers\DashboardController', 'index'])->name('dashboard.home');
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::get('/signin', ['App\Http\Controllers\Auth\SignInController','index']);
+    Route::post('/signin', ['App\Http\Controllers\Auth\SignInController','signIn']);
+});
+
+Route::group(['prefix' => 'warung'], function () {
+    Route::get('/', ['App\Http\Controllers\WarungController', 'index'])->name('warung.home');
+    Route::get('/tambah-barang', ['App\Http\Controllers\WarungController', 'add'])->name('warung.add');
+    Route::post('/tambah-barang', ['App\Http\Controllers\WarungController', 'create'])->name('warung.create');
+});
+
+Route::group(['prefix' => 'rekap-mancing'], function () {
+    Route::get('/', ['App\Http\Controllers\RekapController', 'index'])->name('rekap.home');
+    Route::get('/tambah-rekap', ['App\Http\Controllers\RekapController', 'create'])->name('rekap.create');
 });
