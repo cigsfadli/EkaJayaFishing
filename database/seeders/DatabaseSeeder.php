@@ -2,7 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Barang;
+use App\Models\HadiahJuara;
 use Illuminate\Database\Seeder;
+use DB;
+use Hash;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,8 +16,68 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        // \App\Models\User::factory(10)->create();
+    public function run(){
+        DB::table('users')->insert([
+            'name' => 'super admin',
+            'username' => 'superadmin',
+            'email' => 'superadmin@example.com',
+            'password' => Hash::make('superadmin'),
+            'role' => 'super admin',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'admin',
+            'username' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('admin'),
+            'role' => 'admin',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'kasir',
+            'username' => 'kasir',
+            'email' => 'kasir@example.com',
+            'password' => Hash::make('kasir'),
+            'role' => 'kasir',
+        ]);
+
+        Barang::create([
+            'nama_barang' => 'kopi hitam',
+            'harga_barang' => 3000
+        ]);
+
+        $hadiah = [
+            [null, null, null, null],
+            [null, 10000, null, null],
+            [null, 20000, null, null],
+            [null, 25000, 5000, null],
+            [null, 25000, 10000, 5000],
+            [null, 30000, 15000, 5000],
+            [null, 30000, 20000, 10000],
+            [null, 35000, 25000, 10000],
+            [null, 40000, 25000, 15000],
+            [null, 45000, 30000, 15000],
+            [null, 50000, 30000, 20000],
+            [null, 55000, 35000, 20000],
+            [null, 60000, 35000, 25000],
+            [null, 65000, 40000, 25000],
+            [null, 70000, 40000, 30000],
+            [null, 75000, 45000, 30000],
+            [null, 80000, 45000, 35000],
+            [null, 85000, 50000, 35000],
+            [null, 90000, 50000, 40000],
+            [null, 95000, 55000, 40000],
+            [null, 10000, 55000, 45000],
+        ];
+        $data = [];
+        for ($i=1; $i <= 20; $i++) { 
+            for ($a=1; $a <= 3; $a++) { 
+                $juara = [
+                    'jumlah_pemancing' => $i,
+                    'juara_ke' => $a,
+                    'hadiah' => $hadiah[$i][$a]
+                ];
+                array_push($data, $juara);
+            }
+        }
+        DB::table('hadiah_juara')->insert(@$data);
     }
 }
