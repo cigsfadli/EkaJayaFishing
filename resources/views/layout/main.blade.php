@@ -35,6 +35,13 @@
                             </div>
                         </div>
                         @yield('content')
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <p>Copyright © 2020 <span class="text-primary">EkaJayaFishing</span>. All rights reserved!</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -43,7 +50,24 @@
         <!-- END PAGE CONTAINER-->
 
     </div>
+    @yield('modals')
     @include('layout.js-plugins')
+    @yield('js-plugins')
+    <script>
+        $(() => {
+            var jam = {{ date('H', time()) }};
+            if (jam <= 10 && jam >= 4) {
+                $('#sapa').html('Selamat Pagi');
+            }else if (jam >= 11 && jam <= 14) {
+                $('#sapa').html('Selamat Siang');
+            }else if (jam >= 14 && jam <= 17) {
+                $('#sapa').html('Selamat Sore');
+            }else {
+                $('#sapa').html('Selamat Malam');
+            }
+            
+        });
+    </script>
 
 </body>
 

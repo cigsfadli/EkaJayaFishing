@@ -13,10 +13,10 @@ class CreateWarungsTable extends Migration
      */
     public function up()
     {
-        Schema::create('warungs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Schema::create('warungs', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->timestamps();
+        // });
     }
 
     /**

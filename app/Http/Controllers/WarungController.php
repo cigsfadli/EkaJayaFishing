@@ -40,4 +40,14 @@ class WarungController extends Controller
             return redirect(url('warung'));
         }
     }
+    public function getOption()
+    {
+        $barangs = Barang::all();
+        echo "<option value=''>Pilih Barang</option>";
+        foreach ($barangs as $barang) {
+            echo "<option value='".$barang->id_barang."'>";
+            echo $barang->nama_barang;
+            echo "</option>";
+        }
+    }
 }

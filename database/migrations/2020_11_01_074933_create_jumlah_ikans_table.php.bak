@@ -13,10 +13,10 @@ class CreateJumlahIkansTable extends Migration
      */
     public function up()
     {
-        Schema::create('jumlah_ikans', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Schema::create('jumlah_ikans', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->timestamps();
+        // });
     }
 
     /**

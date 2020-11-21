@@ -24,11 +24,25 @@ class Rekap extends Model
         foreach($data as $rekap){
             
             $res->add([
-                'tanggal_rekap' => $this->checkHari($rekap->tanggal_rekap),
+                'id_rekap' => $rekap->id_rekap,
+                'tanggal_rekap' => $this->checkHari($rekap->tanggal_rekap).date(', d - m - Y', strtotime($rekap->tanggal_rekap)),
                 'jumlah_pemancing' => Pemancing::where('id_rekap', $rekap->id_rekap)->count(),
             ]);
             
         }
+        return $res;
+    }
+    public function scopeGetDataRekapById($query, $id_rekap)
+    {
+        $rekap = $this->where('id_rekap', $id_rekap)->first();
+        if ($rekap == null) {
+            return 0;
+        }
+        $res = [];
+        $res['hari'] = $this->checkHari($rekap->tanggal_rekap);
+        $res['tanggal'] = date('d / m / Y', strtotime($rekap->tanggal_rekap));
+        $res['jumlah_pemancing'] = Pemancing::where('id_rekap', $rekap->id_rekap)->count();
+        $res['id_rekap'] = $rekap->id_rekap;
         return $res;
     }
 
@@ -59,7 +73,6 @@ class Rekap extends Model
                 $hari = 'Minggu';
                 break;
         }
-        $hari .= date(', d - m - Y', strtotime($date));
         return $hari;
     }
     

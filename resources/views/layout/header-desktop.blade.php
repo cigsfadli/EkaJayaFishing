@@ -129,7 +129,7 @@
                                 <img src="{{  asset('assets/images/icon/avatar-big-1.jpg') }}" alt="John Doe" />
                             </div>
                             <div class="content">
-                                <a class="js-acc-btn" href="#">{{ session('user')['name'] }}</a>
+                                <span class="text-dark" id="sapa"></span>, <a class="js-acc-btn text-primary" href="#">{{ session('user')['name'] }}</a>
                             </div>
                             <div class="account-dropdown js-dropdown">
                                 <div class="info clearfix">
@@ -160,7 +160,7 @@
                                     </div>
                                 </div>
                                 <div class="account-dropdown__footer">
-                                    <a href="#">
+                                    <a href="{{ url('auth/signout') }}">
                                         <i class="zmdi zmdi-power"></i>Logout</a>
                                 </div>
                             </div>

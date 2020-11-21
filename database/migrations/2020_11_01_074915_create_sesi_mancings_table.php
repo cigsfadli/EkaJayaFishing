@@ -14,11 +14,13 @@ class CreateSesiMancingsTable extends Migration
     public function up()
     {
         Schema::create('sesi_mancing', function (Blueprint $table) {
-            $table->bigIncrements('i]d_sesi_mancing');
+            $table->bigIncrements('id_sesi_mancing');
             $table->bigInteger('id_pemancing');
             $table->bigInteger('id_rekap');
+            $table->bigInteger('id_hadiah')->nullable();
             $table->integer('sesi_ke')->default(1);
             $table->integer('lapak');
+            $table->integer('jumlah_ikan')->default(0);
             $table->timestamps();
         });
     }

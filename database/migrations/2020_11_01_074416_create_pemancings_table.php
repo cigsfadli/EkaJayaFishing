@@ -18,9 +18,10 @@ class CreatePemancingsTable extends Migration
             $table->unsignedBigInteger('id_rekap');
             $table->string('nama_pemancing', 100);
             $table->enum('status', ['masih mancing', 'selesai'])->default('masih mancing');
+            $table->enum('ganjil_genap', ['ganjil', 'genap'])->nullable();
             $table->integer('lapak_sekarang')->nullable();
             $table->integer('total_sesi')->default(0);
-            $table->integer('hadiah_juara')->default(0);
+            $table->enum('status_tagihan', ['sudah bayar', 'belum bayar'])->default('belum bayar');
             $table->timestamps();
         });
     }

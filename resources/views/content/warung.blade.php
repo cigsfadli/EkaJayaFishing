@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-body">
                 <table class="table table-bordered">
-                    <thead class="bg-overlay--blue text-light">
+                    <thead class="bg-primary text-light">
                         <tr>
                             <th width="20px" class="text-center">No</th>
                             <th>Nama Barang</th>
@@ -34,11 +34,4 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="copyright">
-            <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
-        </div>
-    </div>
-</div>  
 @endsection

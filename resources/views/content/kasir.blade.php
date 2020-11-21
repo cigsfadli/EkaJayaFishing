@@ -17,17 +17,23 @@
                         <tr>
                             <th width="20px" class="text-center">No</th>
                             <th>Tanggal Rekap</th>
-                            <th width="20%" class="text-center"><i class="fa fa-users"></i></th>
+                            <th width="30%">Tagihan (RP)</th>
                             <th width="20%" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($rekaps as $rekap)
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach ($tagihan as $tagihan)
                             <tr>
                                 <td class="text-center">{{ $no++ }}</td>
-                                <td>{{ $rekap['tanggal_rekap'] }}</td>
-                                <td class="text-center">{{ $rekap['jumlah_pemancing'] }}</td>
-                                <td class="text-center"><a href="{{ url('/rekap-mancing/'.$rekap['id_rekap']).'/detail-rekap' }}"><i class="fa fa-list"></i> Detail Rekap</a></td>
+                                <td>{{ $tagihan['nama_pemancing'] }}</td>
+                                <td>{{ $tagihan['tagihan'] }}</td>
+                                <td class="text-center">
+                                    {{-- <small><a href="#" class="text-primary">Detail Tagihan</a></small> --}}
+                                    <small><a href="{{ url('/kasir').'/'.$tagihan['id_pemancing'] }}/detail-tagihan" class="text-success"><i class="fa fa-money-bill-alt"></i> Bayar</a></small>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
