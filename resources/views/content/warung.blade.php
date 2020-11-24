@@ -19,10 +19,15 @@
                         @endphp
                         @foreach ($barangs as $barang)
                             <tr>
-                                <td class="text-center">{{ $i }}</td>
-                                <td>{{ $barang->nama_barang }}</td>
-                                <td>Rp. {{ $barang->harga_barang }}</td>
-                                <td>asd</td>
+                                <td class="text-center align-middle">{{ $i }}</td>
+                                <td class="align-middle">{{ $barang->nama_barang }}</td>
+                                <td class="align-middle">Rp. {{ $barang->harga_barang }}</td>
+                                <td>
+                                    <small>
+                                        <a href="{{ url('warung/edit-barang').'/'.$barang->id_barang }}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                        <a href="{{ url('warung/hapus-barang').'/'.$barang->id_barang }}" class="btn btn-danger" onclick="return confirm('Yakin Mau Dihapus ?')"><i class="fa fa-trash"></i></a>
+                                    </small>
+                                </td>
                             </tr>
                             @php
                                 $i++;

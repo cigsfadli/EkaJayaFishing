@@ -7,13 +7,17 @@ use App\Models\TagihanPemancing;
 
 class TagihanPemancingController extends Controller
 {
+    public function __construct(){
+        $this->middleware('check.session');
+    }
+
     public function add(Request $request)
     {
         $select = TagihanPemancing::where('id_pemancing', $request->post('idpemancing'))->where('id_barang', $request->post('idbarang'));
         $data = $select->first();
         if ($select->count() > 0) {
             $jumlah = $data->jumlah;
-            $update = TagihanPemancing::where('id_pemancing', $request->post('idpemancing'))->where('id_barang', $request->post('idbarang'))->update(['jumlah'=> ( $data + $request->post('jumlah'))]);
+            $update = TagihanPemancing::where('id_pemancing', $request->post('idpemancing'))->where('id_barang', $request->post('idbarang'))->update(['jumlah'=> ( $jumlah + $request->post('jumlah'))]);
             if ($update) {
                 return response()->json(['status' => "Success"], 200);
             }

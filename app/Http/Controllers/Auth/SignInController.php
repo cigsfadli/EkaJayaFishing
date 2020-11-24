@@ -29,14 +29,18 @@ class SignInController extends Controller
             return redirect()->back()->withErrors(['err' => 'Penguna Tidak Ditemukan !']);
         }
         if (Hash::check($password, $user->password)) {
-            $user = [
+            $userLoggedIn = [
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'username' => $user->username,
                 'role' => $user->role
             ];
-            session(['user' => $user]);
-            return redirect(url('/'));
+            session(['user' => $userLoggedIn]);
+            if($user->role == "kasir"){ 
+                return redirect(url('/rekap-mancing'));
+            }else{
+                return redirect(url('/'));
+            }
         }else{
             return redirect()->back()->withErrors(['err' => 'Password Salah !']);
         }

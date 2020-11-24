@@ -18,7 +18,10 @@ class CreateTransaksiTagihansTable extends Migration
             $table->bigInteger('id_pemancing');
             $table->bigInteger('hadiah');
             $table->bigInteger('ikan_garung');
+            $table->bigInteger('sub_total');
             $table->bigInteger('total_tagihan');
+            $table->bigInteger('tunai');
+            $table->bigInteger('kembalian');
             $table->timestamps();
         });
     }

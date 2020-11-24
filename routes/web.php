@@ -25,6 +25,9 @@ Route::group(['prefix' => 'warung'], function () {
     Route::get('/', ['App\Http\Controllers\WarungController', 'index'])->name('warung.home');
     Route::get('/tambah-barang', ['App\Http\Controllers\WarungController', 'add'])->name('warung.add');
     Route::post('/tambah-barang', ['App\Http\Controllers\WarungController', 'create'])->name('warung.create');
+    Route::get('/edit-barang/{id_barang}', ['App\Http\Controllers\WarungController', 'edit'])->name('warung.edit');
+    Route::post('/edit-barang', ['App\Http\Controllers\WarungController', 'update'])->name('warung.update');
+    Route::get('/hapus-barang/{id_barang}', ['App\Http\Controllers\WarungController', 'destroy'])->name('warung.destroy');
     Route::get('/barang-option', ['App\Http\Controllers\WarungController', 'getOption']);
 });
 
@@ -62,3 +65,9 @@ Route::group(['prefix' => 'akun-pengguna'], function () {
 
 Route::get('/halaman-lapak', ['App\Http\Controllers\LapakMancingController', 'index']);
 Route::get('/get-halaman-lapak', ['App\Http\Controllers\LapakMancingController', 'getHalamanLapak']);
+Route::get('/laporan', ['App\Http\Controllers\LaporanController', 'index']);
+Route::post('/laporan-get', ['App\Http\Controllers\LaporanController', 'searchData']);
+Route::get('/laporan-print', ['App\Http\Controllers\LaporanController', 'printReport']);
+
+
+Route::get('/profil', ['App\Http\Controllers\ProfilController', 'index'])->name('profil.home');

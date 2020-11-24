@@ -7,11 +7,15 @@ use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use App\Models\Pemancing;
-use App\Models\TagihanPemancing;
 use App\Models\SesiMancing;
+use App\Models\TagihanPemancing;
+use App\Models\TransaksiTagihan;
 
 class KasirController extends Controller
 {
+    public function __construct(){
+        $this->middleware('check.session');
+    }
     public function index()
     {
         $params['menu'] = "kasir";
@@ -139,6 +143,18 @@ try {
         $printer -> text("\n");
         $printer -> cut();
         $printer -> close();
+
+        TransaksiTagihan::create([
+            'id_pemancing' => $id_pemancing,
+            'hadiah' => $total_hadiah,
+            'ikan_garung' => $request->post('ikangarung'),
+            'sub_total' => $total_tagihan,
+            'total_tagihan' => $request->post('total'),
+            'tunai' => $request->post('tunai'),
+            'kembalian' => $request->post('kembalian'),
+        ]);
+        Pemancing::where('id_pemancing', $id_pemancing)->update(['status_tagihan' => 'sudah bayar']);
+
         
         return response()->json(['status' => 'Success'], 200);
         
