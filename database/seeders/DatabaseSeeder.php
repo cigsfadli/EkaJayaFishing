@@ -18,29 +18,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(){
         DB::table('users')->insert([
-            'name' => 'super admin',
-            'username' => 'superadmin',
-            'email' => 'superadmin@example.com',
-            'password' => Hash::make('superadmin'),
-            'role' => 'super admin',
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin',
-            'username' => 'admin',
+            'name' => 'Eka Jaya',
+            'username' => 'ekajaya',
             'email' => 'admin@example.com',
-            'password' => Hash::make('admin'),
+            'password' => Hash::make('kikandrya'),
             'role' => 'admin',
-        ]);
-        DB::table('users')->insert([
-            'name' => 'kasir',
-            'username' => 'kasir',
-            'email' => 'kasir@example.com',
-            'password' => Hash::make('kasir'),
-            'role' => 'kasir',
         ]);
 
         Barang::create([
             'nama_barang' => 'kopi hitam',
+            'harga_barang' => 3000
+        ]);
+        Barang::create([
+            'nama_barang' => 'roko magnum',
+            'harga_barang' => 2000
+        ]);
+        Barang::create([
+            'nama_barang' => 'kopi good day',
             'harga_barang' => 3000
         ]);
 

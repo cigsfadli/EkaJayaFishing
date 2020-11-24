@@ -9,6 +9,7 @@ class HadiahJuaraController extends Controller
 {
     public function __construct(){
         $this->middleware('check.session');
+        $this->middleware('check.role.admin');
     }
 
     public function index(Request $request)

@@ -8,6 +8,9 @@ use App\Models\Pemancing;
 
 class LapakMancingController extends Controller
 {
+    public function __construct(){
+        $this->middleware('check.session');
+    }
     public function index()
     {
         return view('layout.halaman-lapak');
@@ -24,9 +27,9 @@ class LapakMancingController extends Controller
         foreach ($selectPemancingGanjil as $pemancing) {
 
             if ($pemancing['nama_pemancing'] == null) {
-                echo "\t<td class='bg-danger'width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>".$lapakGanjil."</td>\n";
+                echo "\t<td class='bg-danger text-capitalize font-weight-bold'width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>".$lapakGanjil."</td>\n";
             }else {
-                echo "\t<td class='bg-success'width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>".$lapakGanjil."</td>\n";
+                echo "\t<td class='bg-success text-capitalize font-weight-bold'width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>".$lapakGanjil."</td>\n";
             }
             $lapakGanjil += 2;
         }
@@ -36,9 +39,9 @@ class LapakMancingController extends Controller
         foreach ($selectPemancingGanjil as $pemancing) {
 
             if ($pemancing['nama_pemancing'] == null) {
-                echo "\t<td class='bg-danger' width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>&nbsp;</td>\n";
+                echo "\t<td class='bg-danger text-capitalize font-weight-bold' width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>&nbsp;</td>\n";
             }else {
-                echo "\t<td class='bg-success' width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>".$pemancing['nama_pemancing']."</td>\n";
+                echo "\t<td class='bg-success text-capitalize font-weight-bold' width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>".$pemancing['nama_pemancing']."</td>\n";
             }
         }
         echo "</tr>\n";
@@ -51,9 +54,9 @@ class LapakMancingController extends Controller
         echo "<tr>\n";
         foreach ($selectPemancingGenap as $pemancing) {
             if ($pemancing['nama_pemancing'] == null) {
-                echo "\t<td class='bg-danger' width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>".$lapakGenap."</td>\n";
+                echo "\t<td class='bg-danger text-capitalize font-weight-bold' width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>".$lapakGenap."</td>\n";
             }else {
-                echo "\t<td class='bg-success' width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>".$lapakGenap."</td>\n";
+                echo "\t<td class='bg-success text-capitalize font-weight-bold' width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>".$lapakGenap."</td>\n";
             }
             $lapakGenap += 2;
         }
@@ -61,9 +64,9 @@ class LapakMancingController extends Controller
         echo "<tr>\n";
         foreach ($selectPemancingGenap as $pemancing) {
             if ($pemancing['nama_pemancing'] == null) {
-                echo "\t<td class='bg-danger' width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>&nbsp;</td>\n";
+                echo "\t<td class='bg-danger text-capitalize font-weight-bold' width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>&nbsp;</td>\n";
             }else {
-                echo "\t<td class='bg-success' width='10%' style='padding: 15px 10px;color: white;border:1px solid #000; border-width:0px 2px;'>".$pemancing['nama_pemancing']."</td>\n";
+                echo "\t<td class='bg-success text-capitalize font-weight-bold' width='10%' style='padding: 15px 10px;color: white;border:0px solid #333; border-width:0px 5px;'>".$pemancing['nama_pemancing']."</td>\n";
             }
             
         }

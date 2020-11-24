@@ -92,7 +92,9 @@ class RekapController extends Controller
                     if ($pemancing->lapak_sekarang == null && $pemancing->ganjil_genap == null) {
                         echo "\t\t<small><a class='btn btn-danger text-light' title='Hapus'><i class='fa fa-trash fa-sm'></i></a></small>\n";
                     }
-                echo "\t\t<small><a class='btn btn-warning text-light btnTagihan' onclick='openModalTambahTagihan(this.name)' name='".$pemancing->id_pemancing."' title='Tambah Tagihan'  data-toggle='modal' data-target='#exampleModalCenter2'><i class='fa fa-money-bill-alt fa-sm'></i></a></small>\n";
+                    if ($pemancing->status_tagihan == 'belum bayar') {
+                        echo "\t\t<small><a class='btn btn-warning text-light btnTagihan' onclick='openModalTambahTagihan(this.name)' name='".$pemancing->id_pemancing."' title='Tambah Tagihan'  data-toggle='modal' data-target='#exampleModalCenter2'><i class='fa fa-money-bill-alt fa-sm'></i></a></small>\n";
+                    }
                 echo "\t</td>\n";
             echo "</tr>\n";
             $nomor++;
@@ -200,26 +202,34 @@ class RekapController extends Controller
 
     public function checkLapakRandom($id_rekap, $id_pemancing)
     {
-        $random = rand(1, 20);
-        if ((Pemancing::where('id_rekap', $id_rekap)->where('lapak_sekarang', $random)->count()) < 1) {
-            if ($random % 2 == 0) {
-                Pemancing::where('id_pemancing', $id_pemancing)->update([
-                    'lapak_sekarang' => $random,
-                    'ganjil_genap' => "genap",
-                ]);
+        $ganjil_count = Pemancing::where('id_rekap', $id_rekap)->where('ganjil_genap', 'ganjil')->count();
+        $genap_count = Pemancing::where('id_rekap', $id_rekap)->where('ganjil_genap', 'genap')->count();
+        if ($ganjil_count > $genap_count) {
+            $this->checkLapakGenap($id_rekap, $id_pemancing);
+        }elseif ($ganjil_count < $genap_count) {
+            $this->checkLapakGanjil($id_rekap, $id_pemancing);
+        }else{        
+            $random = rand(1, 20);
+            if ((Pemancing::where('id_rekap', $id_rekap)->where('lapak_sekarang', $random)->count()) < 1) {
+                if ($random % 2 == 0) {
+                    Pemancing::where('id_pemancing', $id_pemancing)->update([
+                        'lapak_sekarang' => $random,
+                        'ganjil_genap' => "genap",
+                    ]);
+                }else{
+                    Pemancing::where('id_pemancing', $id_pemancing)->update([
+                        'lapak_sekarang' => $random,
+                        'ganjil_genap' => "ganjil",
+                        ]);
+                    }
+                    
             }else{
-                Pemancing::where('id_pemancing', $id_pemancing)->update([
-                    'lapak_sekarang' => $random,
-                    'ganjil_genap' => "ganjil",
-                ]);
+                $this->checkLapakRandom($id_rekap, $id_pemancing);
             }
-            
-        }else{
-            $this->checkLapakRandom($id_rekap, $id_pemancing);
         }
     }
-
-
+            
+            
     public function checkLapakGanjil($id_rekap, $id_pemancing)
     {
         

@@ -7,9 +7,16 @@ use App\Models\User as Pengguna;
 
 class AkunPenggunaController extends Controller
 {
+    public function __construct(){
+        $this->middleware('check.session');
+        $this->middleware('check.role.super.admin');
+    }
     public function index()
     {
-        $params['menu'] = 'akun pemancing';
+        if(session('user')['role'] != 'super admin'){
+            return redirect()->back();
+        }
+        $params['menu'] = 'akun pengguna';
         $params['semuaPengguna'] = Pengguna::getDataPengguna();
         return view('content.akun-pengguna', $params);
     }

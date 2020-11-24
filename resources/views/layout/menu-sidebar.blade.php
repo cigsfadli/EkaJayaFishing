@@ -42,7 +42,7 @@
                     </li>
                 @if (session('user')['role'] == "super admin" || session('user')['role'] == "admin")
                 <li class="{{ ($menu == 'laporan') ? 'active has-sub' : '' }}">
-                    <a href="calendar.html">
+                    <a href="{{ url('/laporan') }}">
                         <i class="fas fa-newspaper"></i>Laporan</a>
                 </li>
                 @endif

@@ -17,6 +17,7 @@ class CreateBarangsTable extends Migration
             $table->bigIncrements('id_barang');
             $table->string('nama_barang', 100);
             $table->bigInteger('harga_barang')->default(0);    
+            $table->bigInteger('delete')->default(0);    
             $table->timestamps();
         });
     }
