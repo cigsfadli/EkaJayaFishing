@@ -87,10 +87,17 @@ class RekapController extends Controller
                 }
                 echo "\t<td>\n";
                     if ($pemancing->status != "selesai") {
-                        echo "\t\t<small><a class='btn btn-success text-light' name='$url' title='Selesai' onclick='return konfirmasi(this.name)'><i class='fa fa-flag fa-sm'></i></a></small>\n";
+                        if($pemancing->ganjil_genap != null){
+                            echo "\t\t<small><a class='btn btn-success text-light' name='$url' title='Selesai' onclick='return konfirmasi(this.name)'><i class='fa fa-flag fa-sm'></i></a></small>\n";
+                        }
                     }
                     if ($pemancing->lapak_sekarang == null && $pemancing->ganjil_genap == null) {
-                        echo "\t\t<small><a class='btn btn-danger text-light' title='Hapus'><i class='fa fa-trash fa-sm'></i></a></small>\n";
+                        echo "\t\t
+                        <small>
+                            <a href='". url('/rekap-mancing/delete-pemancing').'/'.$pemancing->id_pemancing."' class='btn btn-danger text-light' title='Hapus' onclick='return confirm('Hapus Pemancing ?')'>
+                                <i class='fa fa-trash fa-sm'></i>
+                            </a>
+                        </small>\n";
                     }
                     if ($pemancing->status_tagihan == 'belum bayar') {
                         echo "\t\t<small><a class='btn btn-warning text-light btnTagihan' onclick='openModalTambahTagihan(this.name)' name='".$pemancing->id_pemancing."' title='Tambah Tagihan'  data-toggle='modal' data-target='#exampleModalCenter2'><i class='fa fa-money-bill-alt fa-sm'></i></a></small>\n";
@@ -179,6 +186,15 @@ class RekapController extends Controller
         }
         
         return redirect('rekap-mancing/'.$request->post('idrekap').'/detail-rekap');
+    }
+    public function deletePemancing($id_pemancing)
+    {
+        $delete = Pemancing::where('id_pemancing', $id_pemancing)->delete();
+        if($delete){
+            return redirect()->back();
+        }else{
+            return redirect()->back();
+        }
     }
 
 

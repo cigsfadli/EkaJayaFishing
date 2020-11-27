@@ -42,6 +42,7 @@ Route::group(['prefix' => 'rekap-mancing'], function () {
     Route::post('/detail-rekap/tambah-pemancing', ['App\Http\Controllers\RekapController', 'tambahPemancing'])->name('rekap.tambah.pemancing');
     Route::get('/kocok-lapak-pemancing/{id_rekap}', ['App\Http\Controllers\RekapController', 'kocokLapak']);
     Route::get('/selesai-mancing/{id_pemancing}', ['App\Http\Controllers\RekapController', 'selesaiMancing']);
+    Route::get('/delete-pemancing/{id_pemancing}', ['App\Http\Controllers\RekapController', 'deletePemancing']);
 
 });
 

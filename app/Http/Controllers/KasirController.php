@@ -25,9 +25,6 @@ class KasirController extends Controller
     }
     public function detailTagihan($id_pemancing)
     {
-        if (TagihanPemancing::where('id_pemancing', $id_pemancing)->count() == 0) {
-            return redirect(url('/kasir'));
-        }
         $params['menu'] = "detail tagihan";
         $params['tagihan'] = TagihanPemancing::getDetailTagihan($id_pemancing);
         

@@ -71,7 +71,7 @@ class WarungController extends Controller
 
     public function getOption()
     {
-        $barangs = Barang::all();
+        $barangs = Barang::where('delete', 0)->get();
         echo "<option value=''>Pilih Barang</option>";
         foreach ($barangs as $barang) {
             echo "<option value='".$barang->id_barang."'>";
