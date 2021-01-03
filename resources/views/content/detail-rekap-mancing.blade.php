@@ -55,7 +55,10 @@
                 <button class="btn au-btn--blue text-light" id="btn-kocok-lapak">
                     <i class="fa fa-random" ></i> Kocok Lapak Pemancingan
                 </button>
-                <a class="btn au-btn--blue text-light float-right" href="{{ url('/rekap-mancing') }}/{{ $rekap['id_rekap'] }}/detail-rekap/hitung-ikan">
+                <a class="btn au-btn--blue text-light float-right" href="{{ url('/rekap-mancing') }}/{{ $rekap['id_rekap'] }}/detail-rekap/hitung-hadiah">
+                    <i class="fa fa-calculator" ></i> Hitung Hadiah
+                </a>
+                <a class="btn au-btn--blue text-light float-right mr-4" href="{{ url('/rekap-mancing') }}/{{ $rekap['id_rekap'] }}/detail-rekap/hitung-ikan">
                     <i class="fa fa-calculator" ></i> Hitung Ikan
                 </a>
             </div>
@@ -86,7 +89,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                     <button type="button" id="btn_tambah_nama_pemancing" class="btn au-btn--blue text-light">Tambah Pemancing</button>
                 </div>
-                
+
             </form>
         </div>
         </div>
@@ -116,7 +119,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                     <button type="submit" id="btn_tambah_tagihan_pemancing" class="btn au-btn--blue text-light">Tambah Pemancing</button>
                 </div>
-                
+
             </form>
         </div>
         </div>
@@ -135,23 +138,28 @@
                 e.preventDefault();
                 addPemancing();
             });
-            
+
             $("#btn-kocok-lapak").click(function(e) {
                 e.preventDefault();
-                
-                $.ajax({
-                    beforeSend: () => {
-                        $('#btn-kocok-lapak').attr('disabled', true)
-                        $('#btn-kocok-lapak').css('cursor', 'not-allowed')
-                    },
-                    type: "GET",
-                    url: "{{ url('/rekap-mancing/kocok-lapak-pemancing').'/'.$rekap['id_rekap'] }}",
-                    success: function (response) {
-                        $('#btn-kocok-lapak').attr('disabled', false)
-                        $('#btn-kocok-lapak').css('cursor', 'pointer')
-                        tabelBodyPemancing();
-                    }
-                });
+                var konfirmasi = confirm("kocok sekarang ?");
+                if (konfirmasi == true) {
+                    $.ajax({
+                        beforeSend: () => {
+                            $('#btn-kocok-lapak').attr('disabled', true)
+                            $('#btn-kocok-lapak').css('cursor', 'not-allowed')
+                        },
+                        type: "GET",
+                        url: "{{ url('/rekap-mancing/kocok-lapak-pemancing').'/'.$rekap['id_rekap'] }}",
+                        success: function (response) {
+                            $('#btn-kocok-lapak').attr('disabled', false)
+                            $('#btn-kocok-lapak').css('cursor', 'pointer')
+                            tabelBodyPemancing();
+                        }
+                    });
+                }else{
+
+                }
+
             });
 
             $("#formAddTagihanPemancing").submit(function(e) {
@@ -176,7 +184,7 @@
             });
         });
         function addPemancing(){
-            
+
             if ($("#tambah_nama_pemancing").val() == '') {
                 $("#tambah_nama_pemancing").removeClass("border-danger");
                 $("label[for=tambah_nama_pemancing]").removeClass("text-danger");
@@ -256,7 +264,7 @@
             }else{
                 return false;
             }
-            
+
         }
 
         function openModalTambahTagihan(idPemancing){

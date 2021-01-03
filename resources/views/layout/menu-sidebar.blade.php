@@ -15,21 +15,21 @@
                         <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                     </li>
                 @endif
-                @if (session('user')['role'] == "super admin") 
+                @if (session('user')['role'] == "super admin")
                     <li class="{{ ($menu == 'akun pengguna' || $menu == 'tambah akun pengguna') ? 'active has-sub' : '' }}">
                         <a href="{{ url('/akun-pengguna') }}">
                             <i class="fas fa-users"></i>Akun Pengguna</a>
                     </li>
                 @endif
-                    
+
                 @if (session('user')['role'] == "super admin" || session('user')['role'] == "admin")
                 <li class="{{ ($menu == 'warung' || $menu == 'tambah barang') ? 'active has-sub' : '' }}">
                     <a href="{{ route('warung.home') }}">
                         <i class="fas fa-shopping-basket"></i>Warung</a>
                 </li>
-                <li class="{{ ($menu == 'hadiah juara' || $menu == 'edit hadiah juara') ? 'active has-sub' : '' }}">
-                    <a href="{{ route('hadiah-juara.home') }}">
-                        <i class="fas fa-trophy"></i>Hadiah Juara</a>
+                <li class="{{ ($menu == 'buku hutang' || $menu == 'edit hadiah juara') ? 'active has-sub' : '' }}">
+                    <a href="{{ route('buku-hutang.home') }}">
+                        <i class="fas fa-book"></i> Buku Hutang</a>
                 </li>
                 @endif
                 <li class="{{ ($menu == 'rekap mancing' || $menu == 'detail rekap' || $menu == 'hitung ikan') ? 'active has-sub' : '' }}">

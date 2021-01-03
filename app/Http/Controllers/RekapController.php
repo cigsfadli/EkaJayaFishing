@@ -7,6 +7,8 @@ use App\Models\Rekap;
 use App\Models\Pemancing;
 use App\Models\SesiMancing;
 use App\Models\HadiahJuara;
+use App\Models\TempHitungIkan;
+use DB;
 
 class RekapController extends Controller
 {
@@ -15,13 +17,13 @@ class RekapController extends Controller
     }
 
     public function index()
-    {    
-        $params['menu'] = 'rekap mancing'; 
+    {
+        $params['menu'] = 'rekap mancing';
         $params['no'] = 1;
         $params['rekaps'] = Rekap::getDataRekap();
 
         return view('content.rekap-mancing', $params);
-            
+
     }
     public function create()
     {
@@ -29,9 +31,9 @@ class RekapController extends Controller
         $keyword = date('Y-m-d', strtotime($date));
 
         if(Rekap::where('tanggal_rekap', 'LIKE', $keyword.'%')->count() < 1){
-            
+
             $create = Rekap::create(['tanggal_rekap' => \Carbon\Carbon::now()]);
-            
+
             if ($create) {
                 return redirect()->back();
             }
@@ -43,7 +45,7 @@ class RekapController extends Controller
     }
     public function detailRekap($id_rekap)
     {
-        
+
         $params['menu'] = 'detail rekap';
         $params['rekap'] = Rekap::getDataRekapById($id_rekap);
         if ($params['rekap'] == 0) {
@@ -56,7 +58,7 @@ class RekapController extends Controller
     {
         $jmlPemancing = Pemancing::where('id_rekap', $request->post('idrekap'))->where('status', 'masih mancing')->count();
         if ($jmlPemancing < 20) {
-            
+
             $create = Pemancing::create([
                 'id_rekap' => $request->post('idrekap'),
                 'nama_pemancing' => $request->post('namapemancing')
@@ -72,7 +74,7 @@ class RekapController extends Controller
     public function pemancing($id_rekap)
     {
         $pemancings = Pemancing::where('id_rekap', $id_rekap)->get();
-        
+
         $nomor = 1;
         foreach ($pemancings as $pemancing) {
             $url = url('/rekap-mancing/selesai-mancing')."/".$pemancing->id_pemancing;
@@ -142,7 +144,7 @@ class RekapController extends Controller
         }else{
             return response()->json(['status' => 'Failed'], 200);
         }
-    
+
     }
 
 
@@ -155,37 +157,70 @@ class RekapController extends Controller
     }
     public function simpanHitungIkan(Request $request, $id_rekap)
     {
-        
+
         $idpemancing = $request->post('idpemancing');
         $lapaksekarang = $request->post('lapaksekarang');
         $jumlahikan = $request->post('jumlahikan');
         $jumlahPemancing = count($idpemancing);
 
         $sesi = SesiMancing::where('id_rekap', $request->post('idrekap'))->max('sesi_ke') + 1;
-        
-        for ($i=0; $i < count($request->post('idpemancing')); $i++) { 
+
+        for ($i=0; $i < count($request->post('idpemancing')); $i++) {
+            $jumlahIkanSebelumnya = 0;
+
+            $hasilSesiSebelumnya =
+                SesiMancing::where("id_pemancing",  $idpemancing[$i])->get();
+
+            foreach ($hasilSesiSebelumnya as $sesi_mancing) {
+
+                $jumlahIkanSebelumnya += $sesi_mancing->jumlah_ikan;
+
+            }
+
             SesiMancing::create([
                 'id_pemancing' => $idpemancing[$i],
                 'id_rekap' => $request->post('idrekap'),
                 'sesi_ke' => $sesi,
                 'lapak' => $lapaksekarang[$i],
-                'jumlah_ikan' => $jumlahikan[$i],
+                'jumlah_ikan' => ( $jumlahikan[$i] - $jumlahIkanSebelumnya),
             ]);
+
             $totalSesi = (Pemancing::where('id_pemancing', $idpemancing[$i])->first()->total_sesi);
             Pemancing::where('id_pemancing', $idpemancing[$i])->update([
                 'total_sesi' => $totalSesi + 1
             ]);
         }
 
-        $select = SesiMancing::where('sesi_ke', $sesi)->where('id_rekap', $request->post('idrekap'))->orderBy('jumlah_ikan', 'DESC')->limit(3)->get();
-        $a = 1;
-        foreach ($select as $mancing) {
-            SesiMancing::where('id_sesi_mancing', $mancing->id_sesi_mancing)->update([
-                "id_hadiah" => (HadiahJuara::where('jumlah_pemancing', $jumlahPemancing)->where('juara_ke', $a++)->first())->id_hadiah_juara
-            ]);
-        }
-        
-        return redirect('rekap-mancing/'.$request->post('idrekap').'/detail-rekap');
+
+        $params['menu'] = "hitung hadiah";
+
+        $params['id_rekap'] = $request->post('idrekap');
+
+        $select =
+            SesiMancing::where('sesi_ke', $sesi)
+                ->where('sesi_mancing.id_rekap', $request->post('idrekap'))
+                ->join("pemancing", "pemancing.id_pemancing", "=", "sesi_mancing.id_pemancing")
+                ->orderBy('jumlah_ikan', 'DESC')
+                ->limit(6)
+                ->select([
+                    'sesi_mancing.id_pemancing',
+                    'sesi_mancing.id_rekap',
+                    'sesi_mancing.hadiah',
+                    'sesi_mancing.sesi_ke',
+                    'sesi_mancing.lapak',
+                    'sesi_mancing.jumlah_ikan',
+                ]);
+
+        $bindings = $select->getBindings();
+
+        $insertQuery ="INSERT into temp_hitung_ikan (id_pemancing, id_rekap, hadiah, sesi_ke, lapak, jumlah_ikan)"
+                . $select->toSql();
+
+        DB::insert($insertQuery, $bindings);
+
+        $urlRedirect = "/rekap-mancing/". $request->post('idrekap') ."/detail-rekap";
+        return redirect(url($urlRedirect));
+
     }
     public function deletePemancing($id_pemancing)
     {
@@ -197,6 +232,49 @@ class RekapController extends Controller
         }
     }
 
+    public function hitungHadiah($idRekap)
+    {
+        $params["menu"] = "hitung hadiah";
+        $params["sesi"] = DB::table("temp_hitung_ikan")->select(["sesi_ke"])->where("id_rekap", $idRekap)->distinct()->get();
+        $params["idRekap"] = $idRekap;
+
+        return view('content.hitung-hadiah', $params);
+    }
+    public function getJuara($id_rekap, $sesi)
+    {
+        $params["sesi"] = $sesi;
+        $params["idRekap"] = $id_rekap;
+        $params['jumlahPemancing']  = DB::table("temp_hitung_ikan")->where("id_rekap", $id_rekap)->where("sesi_ke", $sesi)->count();
+        $params["dataSesiMancing"] = DB::table("temp_hitung_ikan")
+                                        ->where("temp_hitung_ikan.id_rekap", $id_rekap)
+                                        ->where("temp_hitung_ikan.sesi_ke", $sesi)
+                                        ->join("pemancing", "temp_hitung_ikan.id_pemancing", "=", "pemancing.id_pemancing")
+                                        ->limit(6)
+                                        ->orderBy("jumlah_ikan", "DESC")
+                                        ->get();
+
+        return view('content.view-tambahan.form-hitung-hadiah', $params);
+    }
+
+    public function simpanHitungHadiah(Request $request)
+    {
+        for ($i=0; $i < count($request->post('id_temp_hitung_ikan')); $i++) {
+
+            SesiMancing::where('id_pemancing', $request->post('id_pemancing')[$i])
+            ->where('sesi_ke', $request->post('sesi_ke'))
+            ->update([
+                "hadiah" =>  $request->post('hadiah')[$i] == null ? 0 : $request->post('hadiah')[$i]
+            ]);
+
+            DB::table("temp_hitung_ikan")
+            ->where('id_pemancing', $request->post('id_pemancing')[$i])
+            ->where('sesi_ke', $request->post('sesi_ke'))
+            ->delete();
+
+        };
+        $url = "/rekap-mancing/" . $request->post('idRekap') . "/detail-rekap";
+        return redirect($url);
+    }
 
 
 
@@ -220,12 +298,14 @@ class RekapController extends Controller
     {
         $ganjil_count = Pemancing::where('id_rekap', $id_rekap)->where('ganjil_genap', 'ganjil')->count();
         $genap_count = Pemancing::where('id_rekap', $id_rekap)->where('ganjil_genap', 'genap')->count();
+
         if ($ganjil_count > $genap_count) {
             $this->checkLapakGenap($id_rekap, $id_pemancing);
         }elseif ($ganjil_count < $genap_count) {
             $this->checkLapakGanjil($id_rekap, $id_pemancing);
-        }else{        
-            $random = rand(1, 20);
+        }else{
+            $jumlahPemancing = (Pemancing::where('id_rekap', $id_rekap)->count()) % 2 == 0 ? Pemancing::where('id_rekap', $id_rekap)->count() : (Pemancing::where('id_rekap', $id_rekap)->count() + 1);
+            $random = rand(1, $jumlahPemancing);
             if ((Pemancing::where('id_rekap', $id_rekap)->where('lapak_sekarang', $random)->count()) < 1) {
                 if ($random % 2 == 0) {
                     Pemancing::where('id_pemancing', $id_pemancing)->update([
@@ -238,24 +318,25 @@ class RekapController extends Controller
                         'ganjil_genap' => "ganjil",
                         ]);
                     }
-                    
+
             }else{
                 $this->checkLapakRandom($id_rekap, $id_pemancing);
             }
         }
     }
-            
-            
+
+
     public function checkLapakGanjil($id_rekap, $id_pemancing)
     {
-        
-        $random = rand(1, 20);
+
+        $jumlahPemancing = (Pemancing::where('id_rekap', $id_rekap)->count()) % 2 == 0 ? Pemancing::where('id_rekap', $id_rekap)->count() : (Pemancing::where('id_rekap', $id_rekap)->count() + 1);
+        $random = rand(1, $jumlahPemancing);
         if ((Pemancing::where('id_rekap', $id_rekap)->where('lapak_sekarang', $random)->count()) < 1 && $random % 2 != 0) {
             Pemancing::where('id_pemancing', $id_pemancing)->update([
                 'lapak_sekarang' => $random,
                 'ganjil_genap' => "ganjil",
             ]);
-            
+
         }else{
             $this->checkLapakGanjil($id_rekap, $id_pemancing);
         }
@@ -264,13 +345,14 @@ class RekapController extends Controller
 
     public function checkLapakGenap($id_rekap, $id_pemancing)
     {
-        $random = rand(1, 20);
+        $jumlahPemancing = (Pemancing::where('id_rekap', $id_rekap)->count()) % 2 == 0 ? Pemancing::where('id_rekap', $id_rekap)->count() : (Pemancing::where('id_rekap', $id_rekap)->count() + 1);
+        $random = rand(1, $jumlahPemancing);
         if ((Pemancing::where('id_rekap', $id_rekap)->where('lapak_sekarang', $random)->count()) < 1 && $random % 2 == 0) {
             Pemancing::where('id_pemancing', $id_pemancing)->update([
                 'lapak_sekarang' => $random,
                 'ganjil_genap' => "genap",
             ]);
-            
+
         }else{
             $this->checkLapakGenap($id_rekap, $id_pemancing);
         }
