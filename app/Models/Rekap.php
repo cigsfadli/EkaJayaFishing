@@ -19,7 +19,7 @@ class Rekap extends Model
 
     public function scopeGetDataRekap($query)
     {
-        $data = $this->all();
+        $data = $this->orderBy('id_rekap', 'DESC')->get();
         $res = new Collection();
         foreach($data as $rekap){
             

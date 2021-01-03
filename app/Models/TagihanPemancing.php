@@ -49,17 +49,17 @@ class TagihanPemancing extends Model
 
         $pemancing = Pemancing::where('id_pemancing', $id_pemancing)->first();
         $dataTagihan = $this->where('id_pemancing', $pemancing->id_pemancing)->join('barang', 'tagihan_pemancing.id_barang', '=', 'barang.id_barang')->get();
-        
+
         $sub_total = $pemancing->total_sesi * 40000;
-        $selectHadiah = SesiMancing::where('id_pemancing', $id_pemancing)->join('hadiah_juara', 'hadiah_juara.id_hadiah_juara', '=', 'sesi_mancing.id_hadiah')->get();
-       
+        $selectHadiah = SesiMancing::where('id_pemancing', $id_pemancing)->get();
+
         $total_hadiah = 0;
         foreach ($selectHadiah as $hadiah) {
             $total_hadiah += $hadiah->hadiah;
         }
-        
-        
-        
+
+
+
         foreach ($dataTagihan as $tagihan) {
             $sub_total += ($tagihan->harga_barang * $tagihan->jumlah);
             array_push($semuaTagihan, [

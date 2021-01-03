@@ -51,7 +51,7 @@ class LaporanController extends Controller
                 echo "<td>RP ";
                     echo $tagihan;
                 echo "</td>";
-            
+
             echo "</tr>";
         }
         echo "<tr>";
@@ -64,13 +64,7 @@ class LaporanController extends Controller
         $return = "";
         $hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
         $bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-        $return = $hari[date('w', strtotime($date))].
-                    ', '.
-                    date('d', strtotime($date)).
-                    ' '.
-                    $bulan[date('m', strtotime($date))].
-                    ' '.
-                    date('Y', strtotime($date));
+        $return = $hari[date('w', strtotime($date))].', '.date('d', strtotime($date)).' '.$bulan[(date('m', strtotime($date)) < 10 ? substr(date('m', strtotime($date)), 1) : date('m', strtotime($date)))].' '.date('Y', strtotime($date));
         return $return;
     }
 
